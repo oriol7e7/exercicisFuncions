@@ -1,6 +1,5 @@
 fun main(){
-
-    calculVolum(comprovarRadi())
+    gestorMenu(mostraMenu())
 }
 
 fun comprovarRadi():Int {
