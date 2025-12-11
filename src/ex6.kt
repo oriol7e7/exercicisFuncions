@@ -1,24 +1,33 @@
 fun main() {
-    println("El preu a pagar es: ${gestorPreu(demanaPreu())}")
+    println("El preu a pagar es: \u001b[1;32m${String.format("%.2f", gestorDescompte(demanaPreu()))}€\u001b[0m")
 }
 
 fun demanaPreu(): Double {
     var preu: Double?
+    var preuAcumulable: Double = 0.0
     do {
-        println("Posa el preu del producte")
-        preu = readln().toDoubleOrNull()
-        if (preu == null) {
-            println("Error, posa un preu valid")
-        }
-    } while (preu == null)
-    return preu
+        do {
+            println("Posa el preu del producte (posa no vulguis posar més productes)")
+            preu = readln().toDoubleOrNull()
+            if (preu == null || preu <0) {
+                println("Error, posa un preu valid")
+            }
+        } while (preu == null)
+        preuAcumulable+=preu
+    }while(preu != 0.0)
+
+   return preuAcumulable
 }
 
-fun gestorPreu(preu: Double): Double {
+fun gestorDescompte(preu: Double): Double {
     var nouPreu = preu
+    print("Preu sense descompte: ")
+    println("\u001b[1;31m${nouPreu}€\u001b[0m")
     if (esBlackFriday()) {
+        nouPreu = ferEstafa(nouPreu)
         nouPreu = aplicaDescompte(nouPreu, 0.50)
     } else if (promoCiberMonday()) {
+        nouPreu = ferEstafa(nouPreu)
         nouPreu = aplicaDescompte(nouPreu, 0.30)
     } else {
         if (esVip() || preu > 200.0) {
@@ -45,7 +54,7 @@ fun esVip(): Boolean {
 }
 
 fun aplicaDescompte(preu: Double, percentatge: Double): Double {
-    println("Descompte ${percentatge*100}%")
+    println("\u001b[1;32m Descompte ${percentatge*100}%\u001b[0m")
     return preu - preu * percentatge
 }
 
@@ -79,4 +88,10 @@ fun promoCiberMonday(): Boolean {
     }
 }
 
+
+fun ferEstafa(preu: Double): Double {
+    var nouPreu = preu + preu * 0.15
+    nouPreu = aplicaDescompte(nouPreu, 0.20)
+    return nouPreu
+}
 
